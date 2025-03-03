@@ -1,30 +1,14 @@
-# Angularokta
-okta
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { OktaAuthModule, OktaAuthGuard, OKTA_CONFIG } from '@okta/okta-angular';
-import { OktaAuth } from '@okta/okta-auth-js';
+import { RouterModule, Routes } from '@angular/router';
+import { OktaAuthGuard, OktaCallbackComponent, OktaLoginRedirectComponent } from '@okta/okta-angular';
 
-const oktaConfig = {
-  issuer: 'https://your-okta-domain/oauth2/default',
-  clientId: 'your-client-id',
-  redirectUri: window.location.origin + '/login/callback'
-};
+const routes: Routes = [
+  { path: 'login/callback', component: OktaCallbackComponent },
+  { path: 'protected', component: ProtectedComponent, canActivate: [OktaAuthGuard] }
+];
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    OktaAuthModule
-  ],
-  providers: [
-    { provide: OKTA_CONFIG, useValue: new OktaAuth(oktaConfig) }
-  ],
-  bootstrap: [AppComponent]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
-export class AppModule { }
+export class AppRoutingModule { }
